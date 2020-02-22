@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lol_ranking/login-page.dart';
+import 'package:lol_ranking/ui/login_page.dart';
 
 void main() => runApp(MyApp());
 

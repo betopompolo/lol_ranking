@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lol_ranking/form-style.dart';
+import 'package:lol_ranking/ui/form_style.dart';
 
 class LoginPage extends StatelessWidget {
   @override
