@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'Faça login com sua conta Riot para acessar o app',
+              'Digite o seu nome de invocador para acessar o app',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.title,
             ),
@@ -32,13 +32,14 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
-  final _key = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _formChildSpace = 20.0;
+  final _summonerNameFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _key,
+        key: _formKey,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -46,31 +47,26 @@ class LoginFormState extends State<LoginForm> {
             children: <Widget>[
               SizedBox(height: _formChildSpace),
               TextFormField(
-                validator: (value) => value.isEmpty ? 'Digite seu usuário' : null,
-                decoration: textDecoration.copyWith(hintText: 'Usuário'),
+                validator: (value) => value.isEmpty ? 'Digite seu nome de invocador' : null,
+                decoration: textDecoration.copyWith(hintText: 'Nome de invocador'),
                 style: textStyle,
-              ),
-              SizedBox(height: _formChildSpace),
-              TextFormField(
-                validator: (value) => value.isEmpty ? 'Digite sua senha' : null,
-                obscureText: true,
-                decoration: textDecoration.copyWith(hintText: 'Senha'),
-                style: textStyle,
+                controller: _summonerNameFieldController,
               ),
               SizedBox(height: _formChildSpace * 1.2),
               RaisedButton(
-                onPressed: () {
-                  if (_key.currentState.validate()) {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('Form válido :)'),
-                    ));
-                  }
-                },
+                onPressed: _handleSubmit,
                 child: Text('Entrar'),
                 color: Theme.of(context).primaryColor,
               )
             ],
           ),
         ));
+  }
+
+  void _handleSubmit() {
+    if (_formKey.currentState.validate()) {
+      String summonerName = _summonerNameFieldController.text;
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('$summonerName'))); 
+    }
   }
 }
