@@ -6,7 +6,7 @@ import 'package:lol_ranking/data/champion_map.dart';
 import 'package:lol_ranking/data/riot_dto.dart';
 
 class RiotClient {
-  final String _apiKey = 'RGAPI-83369ebf-6f9e-4922-a817-1b689e5d0b2b';
+  final String _apiKey = 'RGAPI-e36f53b5-64be-467a-9b3c-f5aa551db00b';
 
   Future<String> getEncryptedSummonerName(String summonerName) async {
     final String url = 'https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/$summonerName';
@@ -24,13 +24,13 @@ class RiotClient {
 
   List<String> searchChampionName(String query) {
     if (query == null || query.isEmpty) {
-      return null;
+      return [];
     }
 
     String formattedQuery = query[0].toUpperCase() + query.substring(1);
     List<String> searchResults = championNameToKeyMap.keys.where((key) => key.startsWith(formattedQuery)).toList();
 
-    return searchResults;
+    return searchResults ?? [];
   }
 
   Future<Champion> getChampionByName(String name) async {

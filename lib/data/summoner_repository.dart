@@ -9,6 +9,9 @@ class SummonerRepository {
   Future<Summoner> getSummoner() async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final summonerInfo = sharedPreferences.getString(_summonerInfoKey);
+    if (summonerInfo == null) {
+      return null;
+    }
 
     return Summoner.fromJson(json.decode(summonerInfo));
   }

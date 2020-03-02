@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 InputDecoration textDecoration = InputDecoration(
+  hintStyle: TextStyle(
+    color: Color(0xffC4C4C4),
+  ),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.white,
@@ -37,7 +40,7 @@ InputDecoration textDecoration = InputDecoration(
 );
 
 TextStyle textStyle = TextStyle(
-  color: Colors.white
+  color: Colors.white,
 );
 
 class MyTextFormField extends TextFormField {
