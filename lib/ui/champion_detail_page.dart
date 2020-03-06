@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lol_ranking/champion.dart';
+import 'package:lol_ranking/data/riot_client.dart';
 import 'package:lol_ranking/ui/my_scaffold.dart';
 
 class ChampionDetailPage extends StatefulWidget {
@@ -7,66 +9,127 @@ class ChampionDetailPage extends StatefulWidget {
   ChampionDetailPage({this.championName});
 
   @override
-  State<StatefulWidget> createState() {
-    return ChampionDetailPageState();
-  }
+  State<StatefulWidget> createState() => ChampionDetailPageState();
 }
 
 class ChampionDetailPageState extends State<ChampionDetailPage> {
+  Future<Champion> _futureChampion;
+  Future<ChampionMastery> _futureMastery;
+  final RiotClient _riotClient = RiotClient();
+
+  @override
+  void initState() {
+    super.initState();
+    _futureChampion = _riotClient.getChampionByName(widget.championName);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _championImgSize = MediaQuery.of(context).size.height * 0.2;
-    final name = widget.championName;
-
     return MyScaffold(
-      body: Padding(
-        padding:
-            const EdgeInsets.only(bottom: 25, top: 25, left: 20, right: 20),
-        child: Column(
-          children: <Widget>[
-            // Header
-            Container(
-              width: _championImgSize,
-              height: _championImgSize,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://icon2.cleanpng.com/20180326/hgq/kisspng-league-of-legends-ahri-cosplay-wig-nine-tailed-fox-league-of-legends-5ab8d61f1b1033.8352936815220628791109.jpg'),
-                  )),
-            ),
-            SizedBox(height: 22.0),
-            Center(
-              child: Text(
-                name, 
-                style: Theme.of(context).textTheme.display4
+      body: FutureBuilder(
+        future: _futureChampion,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Champion champion = snapshot.data;
+
+            if (_futureMastery == null) {
+              _futureMastery = _riotClient.getChampionMastery(champion);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 25, top: 25, left: 20, right: 20),
+              child: Column(
+                children: <Widget>[
+                  ..._buildHeader(champion),
+                  _buildChampionInfo(champion),
+                ],
               ),
-            ),
-            Center(
-              child: Text(
-                'A raposa de nove caldas',
-                style: Theme.of(context).textTheme.display2,
-              ),
-            ),
-            SizedBox(height: 24.0),
-            Divider(
-              color: Color(0xffC4C4C4),
-              height: 1.0,
-            ),
-            SizedBox(height: 37.0),
-            // Mastery Section
-            Text('Nível de maestria', style: Theme.of(context).textTheme.display3),
-            SizedBox(height: 16.0),
-            Text('4', style: Theme.of(context).textTheme.display4),
-            SizedBox(height: 29.0),
-            // Available chest Section
-            Text('Baús disponíveis', style: Theme.of(context).textTheme.display3),
-            SizedBox(height: 16.0),
-            Text('2', style: Theme.of(context).textTheme.display4),
-          ],
+            );
+          }
+          return CircularProgressIndicator();
+        },
+      )
+    );
+  }
+
+  List<Widget> _buildHeader(Champion champion) {
+    final _championImgSize = MediaQuery.of(context).size.height * 0.2;
+
+    return [
+      Container(
+        width: _championImgSize,
+        height: _championImgSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.contain,
+            image: NetworkImage(champion.thumbnailUrl),
+          )
         ),
       ),
+      SizedBox(height: 22.0),
+      Center(
+        child: Text(champion.name, style: Theme.of(context).textTheme.display4),
+      ),
+      Center(
+        child: Text(
+          champion.shortDescription[0].toUpperCase() + champion.shortDescription.substring(1),
+          style: Theme.of(context).textTheme.display2,
+        ),
+      ),
+      SizedBox(height: 24.0),
+      Divider(
+        color: Color(0xffC4C4C4),
+        height: 1.0,
+      ),
+      SizedBox(height: 37.0),
+    ];
+  }
+
+  Widget _buildChampionInfo(Champion champion) {
+    return FutureBuilder(
+      future: _futureMastery,
+      builder: (context, snapshot) {
+        ChampionMastery mastery = snapshot.data;
+        
+        if (snapshot.hasData) {
+          String availableChests = mastery.isChestAvailable ? '1' : '0';
+          String masteryLevel = mastery.level == null ? '' : mastery.level.toString();
+
+          return Column(
+            children: <Widget>[
+              ..._buildSection(
+                title: 'Nível de maestria',
+                data: masteryLevel,
+              ),
+              ..._buildSection(
+                title: 'Baús Disponíveis',
+                data: availableChests,
+                hasBottomPadding: false,
+              ),
+            ],
+          );
+        }
+
+        return Container();
+      },
     );
+  }
+
+  List<Widget> _buildSection({String title, String data, bool hasBottomPadding = true}) {
+    List<Widget> sectionWidgets = <Widget>[
+      Text(
+        title,
+        style: Theme.of(context).textTheme.display3
+      ),
+      SizedBox(height: 16.0),
+      Text(data, style: Theme.of(context).textTheme.display4),
+    ];
+
+    if (hasBottomPadding) {
+      sectionWidgets.add(SizedBox(height: 29.0));
+    }
+
+    return sectionWidgets;
   }
 }
