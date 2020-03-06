@@ -45,7 +45,7 @@ class RiotClient {
       headers: _getRiotHeader(),
     );
 
-    final responseJson = json.decode(response.body);
+    final responseJson = json.decode(utf8.decode(response.bodyBytes));
     final ChampionDTO championDTO = ChampionDTO.fromJSON(responseJson['data'][championKey]);
     return championDTO.map();
   }

@@ -77,9 +77,9 @@ class ChampionMasteryDTO {
 
   factory ChampionMasteryDTO.fromJSON(Map<String, dynamic> json) {
     return ChampionMasteryDTO(
-      chestGranted: json['chestGranted'],
+      chestGranted: json['chestGranted'] ?? false,
       championPointsUntilNextLevel: json['championPointsUntilNextLevel'],
-      championLevel: json['championLevel'],
+      championLevel: json['championLevel'] ?? 0,
     );
   }
 
