@@ -34,19 +34,19 @@ class SummonerDTO {
 }
 
 class ChampionDTO {
-  String id;
+  String key;
   String name;
   String title;
 
   ChampionDTO({
-    this.id,
+    this.key,
     this.name,
     this.title,
   });
 
   factory ChampionDTO.fromJSON(Map<String, dynamic> json) {
     return ChampionDTO(
-      id: json['id'],
+      key: json['key'],
       name: json['name'],
       title: json['title'],
     );
@@ -56,9 +56,39 @@ class ChampionDTO {
     String championKey = championNameToKeyMap[this.name];
 
     return Champion(
+      id: this.key,
       name: this.name,
       shortDescription: this.title,
       thumbnailUrl: 'http://ddragon.leagueoflegends.com/cdn/10.4.1/img/champion/$championKey.png'
     );
   }
+}
+
+class ChampionMasteryDTO {
+  bool chestGranted;
+  int championPointsUntilNextLevel;
+  int championLevel;
+
+  ChampionMasteryDTO({
+    this.chestGranted,
+    this.championPointsUntilNextLevel,
+    this.championLevel,
+  });
+
+  factory ChampionMasteryDTO.fromJSON(Map<String, dynamic> json) {
+    return ChampionMasteryDTO(
+      chestGranted: json['chestGranted'],
+      championPointsUntilNextLevel: json['championPointsUntilNextLevel'],
+      championLevel: json['championLevel'],
+    );
+  }
+
+  ChampionMastery map() {
+    return ChampionMastery(
+      level: this.championLevel,
+      pointsToNextLevel: this.championPointsUntilNextLevel,
+      isChestAvailable: this.chestGranted,
+    );
+  }
+
 }

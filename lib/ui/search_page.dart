@@ -3,6 +3,7 @@ import 'package:lol_ranking/data/riot_client.dart';
 import 'package:lol_ranking/data/summoner_repository.dart';
 import 'package:lol_ranking/main.dart';
 import 'package:lol_ranking/summoner.dart';
+import 'package:lol_ranking/ui/champion_detail_page.dart';
 import 'package:lol_ranking/ui/form_style.dart';
 import 'package:lol_ranking/ui/login_page.dart';
 
@@ -68,7 +69,7 @@ class SearchPageState extends State<SearchPage> with RouteAware {
   }
 
   _handleSearchSubmit(String championName) {
-    print("Selected champion: $championName");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ChampionDetailPage(championName: championName)));
   }
 
   _openLoginPage() {
