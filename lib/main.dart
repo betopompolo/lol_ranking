@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lol_ranking/ui/search_page.dart';
+import 'package:lol_ranking/ui/typography.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,9 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xff0BC6E3),
         backgroundColor: Color(0xff081A21),
-        textTheme:
-            TextTheme(display4: TextStyle(fontSize: 72.0, color: Colors.white)),
-        fontFamily: 'Montserrat',
+        textTheme: myTextTheme,
+        fontFamily: myFontFamily,
       ),
       home: SearchPage(),
       navigatorObservers: [routeObserver],
